@@ -12,8 +12,13 @@ import {
 export default class Start extends Component {
   constructor(props) {
     super(props);
-    this.state = { name: '' };
+    this.state = {
+      name: '',
+      background: ''
+    };
   }
+
+  onPress = () => {};
 
   render() {
     return (
@@ -22,6 +27,7 @@ export default class Start extends Component {
         source={require('../assets/BackgroundImage.png')}>
         <Text style={styles.title}>Chit Chat</Text>
 
+        {/* Container for TextInput */}
         <View style={styles.container}>
           <View style={styles.box}>
             <TextInput
@@ -33,22 +39,41 @@ export default class Start extends Component {
           </View>
           <View style={styles.box}>
             <Text>Choose a background color</Text>
+
+            {/* Background Color Choices */}
             <View style={styles.colorChoice}>
               <TouchableOpacity
                 style={[styles.button1, styles.colorCircle]}
-                // onPress={this.onPress}
+                onPress={() => {
+                  this.props.navigation.navigate('Chat', {
+                    background: this.setState({ background: '#090C08' })
+                  });
+                }}
               />
+
               <TouchableOpacity
                 style={[styles.button2, styles.colorCircle]}
-                // onPress={this.onPress}
+                onPress={() => {
+                  this.props.navigation.navigate('Chat', {
+                    background: this.setState({ background: '#474056' })
+                  });
+                }}
               />
               <TouchableOpacity
                 style={[styles.button3, styles.colorCircle]}
-                // onPress={this.onPress}
+                onPress={() => {
+                  this.props.navigation.navigate('Chat', {
+                    background: this.setState({ background: '#8A95A5' })
+                  });
+                }}
               />
               <TouchableOpacity
                 style={[styles.button4, styles.colorCircle]}
-                // onPress={this.onPress}
+                onPress={() => {
+                  this.props.navigation.navigate('Chat', {
+                    background: this.setState({ background: '#B9C6AE' })
+                  });
+                }}
               />
             </View>
           </View>
@@ -56,7 +81,9 @@ export default class Start extends Component {
             <TouchableOpacity
               style={styles.chatButton}
               onPress={() => {
-                this.props.navigation.navigate('Chat');
+                this.props.navigation.navigate('Chat', {
+                  name: this.state.name
+                });
               }}>
               <Text style={styles.buttonText}>Start Chatting</Text>
             </TouchableOpacity>

@@ -16,12 +16,3 @@ const navigator = createStackNavigator({
 const navigatorContainer = createAppContainer(navigator);
 // Export it as the root component
 export default navigatorContainer;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
