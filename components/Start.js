@@ -14,11 +14,9 @@ export default class Start extends Component {
     super(props);
     this.state = {
       name: '',
-      background: ''
+      selectedColor: ''
     };
   }
-
-  onPress = () => {};
 
   render() {
     return (
@@ -30,62 +28,50 @@ export default class Start extends Component {
         {/* Container for TextInput */}
         <View style={styles.container}>
           <View style={styles.box}>
+            {/* Name to be displayed in header */}
             <TextInput
-              style={styles.nameInput}
+              style={[styles.nameInput, styles.alignment]}
               onChangeText={name => this.setState({ name })}
               value={this.state.name}
               placeholder="Your Name"
             />
           </View>
           <View style={styles.box}>
-            <Text>Choose a background color</Text>
+            <Text style={styles.alignment}>Choose a background color</Text>
 
             {/* Background Color Choices */}
             <View style={styles.colorChoice}>
               <TouchableOpacity
+                onPress={() => this.setState({ selectedColor: '#090C08' })}
                 style={[styles.button1, styles.colorCircle]}
-                onPress={() => {
-                  this.props.navigation.navigate('Chat', {
-                    background: this.setState({ background: '#090C08' })
-                  });
-                }}
               />
 
               <TouchableOpacity
+                onPress={() => this.setState({ selectedColor: '#474056' })}
                 style={[styles.button2, styles.colorCircle]}
-                onPress={() => {
-                  this.props.navigation.navigate('Chat', {
-                    background: this.setState({ background: '#474056' })
-                  });
-                }}
               />
               <TouchableOpacity
+                onPress={() => this.setState({ selectedColor: '#8A95A5' })}
                 style={[styles.button3, styles.colorCircle]}
-                onPress={() => {
-                  this.props.navigation.navigate('Chat', {
-                    background: this.setState({ background: '#8A95A5' })
-                  });
-                }}
               />
               <TouchableOpacity
+                onPress={() => this.setState({ selectedColor: '#B9C6AE' })}
                 style={[styles.button4, styles.colorCircle]}
-                onPress={() => {
-                  this.props.navigation.navigate('Chat', {
-                    background: this.setState({ background: '#B9C6AE' })
-                  });
-                }}
               />
             </View>
           </View>
           <View style={styles.box}>
             <TouchableOpacity
-              style={styles.chatButton}
+              style={[styles.chatButton, styles.alignment]}
               onPress={() => {
                 this.props.navigation.navigate('Chat', {
-                  name: this.state.name
+                  name: this.state.name,
+                  selectedColor: this.state.selectedColor
                 });
               }}>
-              <Text style={styles.buttonText}>Start Chatting</Text>
+              <Text style={[styles.buttonText, styles.alignment]}>
+                Start Chatting
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -133,7 +119,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     color: '#FFFFFF',
-    alignItems: 'center'
+    paddingTop: 10
   },
   colorCircle: {
     width: 50,
@@ -154,12 +140,9 @@ const styles = StyleSheet.create({
   },
   box: {
     flex: 1,
-    justifyContent: 'space-around'
+    justifyContent: 'space-evenly'
+  },
+  alignment: {
+    alignSelf: 'center'
   }
 });
-// create a TextInput component in the start screen where the user can type in their name. Then, we need to make the name a state and update it via setState when the user has entered their name.
-
-// create an onPress function that gets called whenever the user presses a button. In this function, you can update your state name and navigate the user to the chat screen.
-
-//  add an object as a second parameter to navigate and add data you want to use in the screen you’re transitioning to:
-// this.props.navigation.navigate('Chat', { name: this.state.name })
