@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  Button,
   TextInput,
   StyleSheet,
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
+// Keyboard Spacer
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default class Start extends Component {
   constructor(props) {
@@ -62,6 +63,10 @@ export default class Start extends Component {
           </View>
           <View style={styles.box}>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="More options"
+              accessibilityHint="Let’s you choose to send an image or your geolocation."
+              accessibilityRole="button"
               style={[styles.chatButton, styles.alignment]}
               onPress={() => {
                 this.props.navigation.navigate('Chat', {
@@ -75,6 +80,7 @@ export default class Start extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
       </ImageBackground>
     );
   }

@@ -6,6 +6,8 @@ import Chat from './components/Chat';
 // import react Navigation
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+// Keyboard Spacer
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 // Create the navigator
 const navigator = createStackNavigator({
