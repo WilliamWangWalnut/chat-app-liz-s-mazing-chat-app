@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import NetInfo from "@react-native-community/netinfo";
 import { View, StyleSheet, Platform, Text } from "react-native";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
+
 // Keyboard Spacer for Android
 import KeyboardSpacer from "react-native-keyboard-spacer";
 const firebase = require("firebase");
@@ -27,10 +29,42 @@ export default class Chat extends Component {
       user: {
         _id: "",
         name: "",
+        isConnected: false,
         avatar: ""
       },
       uid: 0
     };
+  }
+
+  async getMessages() {
+    let messages = "";
+    try {
+      messages = (await AsyncStorage.getItem("messages")) || [];
+      this.setState({
+        messages: JSON.parse(messages)
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async saveMessages() {
+    try {
+      await AsyncStorage.setItem(
+        "messages",
+        JSON.stringify(this.state.messages)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async deleteMessages() {
+    try {
+      await AsyncStorage.removeItem("messages");
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   componentDidMount() {
@@ -46,25 +80,14 @@ export default class Chat extends Component {
         this.onCollectionUpdate
       );
     });
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: "Hey all you cool cats and kittens",
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: "React Native",
-            avatar: "https://placeimg.com/140/140/any"
-          }
-        },
-        {
-          _id: 2,
-          text: this.props.navigation.state.params.name + " entered the chat",
-          createdAt: new Date(),
-          system: true
-        }
-      ]
+    this.getMessages();
+
+    NetInfo.isConnected.fetch().then(isConnected => {
+      if (isConnected) {
+        console.log("online");
+      } else {
+        console.log("offline");
+      }
     });
   }
 
@@ -107,7 +130,7 @@ export default class Chat extends Component {
         messages: GiftedChat.append(previousState.messages, messages)
       }),
       () => {
-        this.addMessages();
+        this.saveMessages();
       }
     );
   }
@@ -124,13 +147,14 @@ export default class Chat extends Component {
       />
     );
   }
+  // Hide toolbar when user is offline
+  renderInputToolbar(props) {
+    if (this.state.isConnected == false) {
+    } else {
+      return <InputToolbar {...props} />;
+    }
+  }
 
-  //  This adds the users name to the header
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.state.params.name
-    };
-  };
   render() {
     return (
       <View
@@ -139,8 +163,7 @@ export default class Chat extends Component {
           {
             backgroundColor: this.props.navigation.state.params.selectedColor
           }
-        ]}
-      >
+        ]}>
         <Text style={styles.userName}>
           {this.props.navigation.state.params.name} in da houz
         </Text>

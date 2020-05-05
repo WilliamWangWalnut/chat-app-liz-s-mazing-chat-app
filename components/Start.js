@@ -5,14 +5,11 @@ import {
   ImageBackground,
   Text,
   TextInput,
-  Alert,
   TouchableOpacity,
-  Button,
   View
 } from "react-native";
+
 import KeyboardSpacer from "react-native-keyboard-spacer";
-const firebase = require("firebase");
-require("firebase/firestore");
 
 export default class Start extends Component {
   state = {
@@ -24,8 +21,7 @@ export default class Start extends Component {
     return (
       <ImageBackground
         style={styles.backgroundImage}
-        source={require("../assets/BackgroundImage.png")}
-      >
+        source={require("../assets/BackgroundImage.png")}>
         <Text style={styles.title}>Chit Chat</Text>
 
         {/* Container for TextInput */}
@@ -37,7 +33,7 @@ export default class Start extends Component {
               style={[styles.nameInput, styles.alignment]}
               onChangeText={name => this.setState({ name })}
               value={this.state.name}
-              placeholder="Your Name"
+              placeholder='Your Name'
             />
           </View>
           <View style={styles.box}>
@@ -67,17 +63,16 @@ export default class Start extends Component {
           <View style={styles.box}>
             <TouchableOpacity
               accessible={true}
-              accessibilityLabel="More options"
-              accessibilityHint="Let’s you choose to send an image or your geolocation."
-              accessibilityRole="button"
+              accessibilityLabel='More options'
+              accessibilityHint='Let’s you choose to send an image or your geolocation.'
+              accessibilityRole='button'
               style={[styles.chatButton, styles.alignment]}
               onPress={() => {
                 this.props.navigation.navigate("Chat", {
                   name: this.state.name,
                   selectedColor: this.state.selectedColor
                 });
-              }}
-            >
+              }}>
               <Text style={[styles.buttonText, styles.alignment]}>
                 Start Chatting
               </Text>
