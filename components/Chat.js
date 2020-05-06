@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import NetInfo from "@react-native-community/netinfo";
 import { View, StyleSheet, Platform, Text } from "react-native";
-import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
-
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
 // Keyboard Spacer for Android
 import KeyboardSpacer from "react-native-keyboard-spacer";
 const firebase = require("firebase");
@@ -29,13 +27,16 @@ export default class Chat extends Component {
       user: {
         _id: "",
         name: "",
-        isConnected: false,
         avatar: ""
       },
       uid: 0
     };
   }
-
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.state.params.name
+    };
+  };
   async getMessages() {
     let messages = "";
     try {
@@ -47,7 +48,6 @@ export default class Chat extends Component {
       console.log(error.message);
     }
   }
-
   async saveMessages() {
     try {
       await AsyncStorage.setItem(
@@ -66,8 +66,8 @@ export default class Chat extends Component {
       console.log(error.message);
     }
   }
-
   componentDidMount() {
+    this.getMessages();
     this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
       if (!user) {
         user = await firebase.auth().signInAnonymously();
@@ -80,14 +80,8 @@ export default class Chat extends Component {
         this.onCollectionUpdate
       );
     });
-    this.getMessages();
-
-    NetInfo.isConnected.fetch().then(isConnected => {
-      if (isConnected) {
-        console.log("online");
-      } else {
-        console.log("offline");
-      }
+    this.setState({
+      messages: []
     });
   }
 
@@ -130,6 +124,7 @@ export default class Chat extends Component {
         messages: GiftedChat.append(previousState.messages, messages)
       }),
       () => {
+        this.addMessages();
         this.saveMessages();
       }
     );
@@ -147,14 +142,13 @@ export default class Chat extends Component {
       />
     );
   }
-  // Hide toolbar when user is offline
-  renderInputToolbar(props) {
-    if (this.state.isConnected == false) {
-    } else {
-      return <InputToolbar {...props} />;
-    }
-  }
 
+  //  This adds the users name to the header
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.state.params.name
+    };
+  };
   render() {
     return (
       <View
