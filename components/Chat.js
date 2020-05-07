@@ -162,6 +162,9 @@ export default class Chat extends Component {
         wrapperStyle={{
           right: {
             backgroundColor: "#444"
+          },
+          left: {
+            backgroundColor: "#FF8C00"
           }
         }}
       />
@@ -193,8 +196,8 @@ export default class Chat extends Component {
         </Text>
 
         <GiftedChat
-          renderInputToolbar={this.renderInputToolbar.bind(this)}
-          renderBubble={this.renderBubble.bind(this)}
+          renderInputToolbar={this.renderInputToolbar}
+          renderBubble={this.renderBubble}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{
