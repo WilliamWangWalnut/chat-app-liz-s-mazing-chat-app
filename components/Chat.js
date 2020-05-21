@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { AsyncStorage, View, StyleSheet, Platform, Text } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
-// Keyboard Spacer for Android
 import KeyboardSpacer from "react-native-keyboard-spacer";
 const firebase = require("firebase");
 require("firebase/firestore");
 import { YellowBox } from "react-native";
 YellowBox.ignoreWarnings(["Warning: ..."]);
+import CustomActions from "./CustomActions";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 console.disableYellowBox = true;
 window.addEventListener = x => x;
@@ -20,6 +21,19 @@ export default class Chat extends Component {
   };
   constructor() {
     super();
+    this.state = {
+      messages: [],
+      user: {
+        _id: "",
+        name: "",
+        avatar: ""
+      },
+      // uid: null,
+      isConnected: false, // this line was creating an error, forcing to use this.state.isConnected on line 101
+      image: null,
+      location: null
+    };
+
     if (!firebase.apps.length) {
       firebase.initializeApp({
         apiKey: "AIzaSyAAD4AKdA77lwM5-K72k7eCglp3OsjWOqk",
@@ -32,20 +46,10 @@ export default class Chat extends Component {
       });
     }
     this.referenceMessages = firebase.firestore().collection("messages");
-
-    this.state = {
-      messages: [],
-      user: {
-        _id: "",
-        name: "",
-        avatar: ""
-      },
-      uid: 0
-    };
   }
 
   getMessages = async () => {
-    let messages = "";
+    let messages = [];
     try {
       messages = (await AsyncStorage.getItem("messages")) || [];
       this.setState({
@@ -115,7 +119,9 @@ export default class Chat extends Component {
 
   onCollectionUpdate = querySnapshot => {
     const messages = [];
+    // loop through documents
     querySnapshot.forEach(doc => {
+      // get data snapshot
       var data = doc.data();
       messages.push({
         _id: data._id,
@@ -125,7 +131,9 @@ export default class Chat extends Component {
           _id: data.user._id,
           name: data.user.name,
           avatar: data.user.avatar
-        }
+        },
+        image: data.image || "",
+        location: data.location
       });
     });
     this.setState({
@@ -133,15 +141,18 @@ export default class Chat extends Component {
     });
   };
 
-  addMessages = () => {
+  addMessages() {
+    const message = this.state.messages[0];
     this.referenceMessages.add({
-      _id: this.state.messages[0]._id,
-      text: this.state.messages[0].text,
-      createdAt: this.state.messages[0].createdAt,
-      user: this.state.messages[0].user,
-      uid: this.state.uid
+      _id: message._id,
+      text: message.text || "",
+      createdAt: message.createdAt,
+      user: message.user,
+      image: message.image || "",
+      location: message.location || null,
+      sent: true
     });
-  };
+  }
 
   onSend(messages = []) {
     this.setState(
@@ -177,6 +188,31 @@ export default class Chat extends Component {
       return <InputToolbar {...props} />;
     }
   };
+
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <View>
+          <MapView
+            style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
+            }}
+          />
+        </View>
+      );
+    }
+    return null;
+  }
+
+  renderCustomActions = props => {
+    return <CustomActions {...props} />;
+  };
+
   componentWillUnmount() {
     this.authUnsubscribe();
     this.unsubscribe();
@@ -194,12 +230,20 @@ export default class Chat extends Component {
         <Text style={styles.userName}>
           {this.props.navigation.state.params.name} in da houz
         </Text>
-
+        {this.state.image && (
+          <Image
+            source={{ uri: this.state.image.uri }}
+            style={{ width: 200, height: 200 }}
+          />
+        )}
         <GiftedChat
+          renderCustomView={this.renderCustomView}
+          renderActions={this.renderCustomActions}
           renderInputToolbar={this.renderInputToolbar}
           renderBubble={this.renderBubble}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
+          image={this.state.image}
           user={{
             _id: 1
           }}
