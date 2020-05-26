@@ -28,8 +28,7 @@ export default class Chat extends Component {
         name: "",
         avatar: ""
       },
-      // uid: null,
-      isConnected: false, // this line was creating an error, forcing to use this.state.isConnected on line 101
+      isConnected: false,
       image: null,
       location: null
     };
@@ -79,9 +78,7 @@ export default class Chat extends Component {
   };
   componentDidMount() {
     NetInfo.fetch().then(state => {
-      //console.log('Connection type', state.type);
       if (state.isConnected) {
-        //console.log('Is connected?', state.isConnected);
         this.authUnsubscribe = firebase
           .auth()
           .onAuthStateChanged(async user => {
@@ -103,7 +100,6 @@ export default class Chat extends Component {
                 " has entered the chat",
               messages: []
             });
-            //console.log(user);
             this.unsubscribe = this.referenceMessages
               .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
@@ -122,7 +118,7 @@ export default class Chat extends Component {
     // loop through documents
     querySnapshot.forEach(doc => {
       // get data snapshot
-      var data = doc.data();
+      let data = doc.data();
       messages.push({
         _id: data._id,
         text: data.text.toString(),
@@ -141,7 +137,7 @@ export default class Chat extends Component {
     });
   };
 
-  addMessages() {
+  addMessages = () => {
     const message = this.state.messages[0];
     this.referenceMessages.add({
       _id: message._id,
@@ -152,7 +148,7 @@ export default class Chat extends Component {
       location: message.location || null,
       sent: true
     });
-  }
+  };
 
   onSend(messages = []) {
     this.setState(

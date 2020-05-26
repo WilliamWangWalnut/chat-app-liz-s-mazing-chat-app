@@ -54,7 +54,6 @@ export default class CustomActions extends React.Component {
     }
   }
 
-  // Upload image as Blob(binary large object) to Firebase storage
   async uploadImage(uri) {
     try {
       const blob = await new Promise((resolve, reject) => {
@@ -76,7 +75,7 @@ export default class CustomActions extends React.Component {
         .storage()
         .ref()
         .child(`images/${imageArrayLength}`);
-      // console.log(ref, getImageName[imageArrayLength]);
+
       const snapshot = await ref.put(blob);
       blob.close();
       const imageURL = await snapshot.ref.getDownloadURL();
@@ -90,9 +89,6 @@ export default class CustomActions extends React.Component {
     try {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status === "granted") {
-        // const location = await Location.getCurrentPositionAsync({}).catch(error =>
-        // 	console.log(error),
-        // );
         const location = await Location.getCurrentPositionAsync({});
 
         if (location) {
@@ -125,13 +121,10 @@ export default class CustomActions extends React.Component {
       async buttonIndex => {
         switch (buttonIndex) {
           case 0:
-            //console.log('pick image from library');
             return this.pickImage();
           case 1:
-            //console.log('take photo');
             return this.takePhoto();
           case 2:
-            //console.log('get location');
             return this.getLocation();
           default:
         }

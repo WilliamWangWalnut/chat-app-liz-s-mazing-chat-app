@@ -24,11 +24,8 @@ export default class Start extends Component {
         source={require("../assets/BackgroundImage.png")}>
         <Text style={styles.title}>Chit Chat</Text>
 
-        {/* Container for TextInput */}
         <View style={styles.container}>
           <View style={styles.box}>
-            {/* Name to be displayed in header */}
-
             <TextInput
               style={[styles.nameInput, styles.alignment]}
               onChangeText={name => this.setState({ name })}
@@ -39,7 +36,6 @@ export default class Start extends Component {
           <View style={styles.box}>
             <Text style={styles.alignment}>Choose a background color</Text>
 
-            {/* Background Color Choices */}
             <View style={styles.colorChoice}>
               <TouchableOpacity
                 onPress={() => this.setState({ selectedColor: "#090C08" })}
