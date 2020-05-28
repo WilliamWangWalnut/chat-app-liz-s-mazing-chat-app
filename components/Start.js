@@ -13,14 +13,10 @@ import {
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default class Start extends Component {
-  constructor() {
-    super();
-    state = {
-      name: '',
-      selectedColor: '',
-    };
-  }
-
+  state = {
+    name: '',
+    selectedColor: '',
+  };
 
   render() {
     return (
