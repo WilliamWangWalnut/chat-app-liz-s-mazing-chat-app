@@ -48,3 +48,6 @@ I used Firebase’s Cloud Firestore database to get real-time data.
 9. Make sure that you’re creating a Firestore Database—NOT a “Realtime Database.”
 
 ### And with that, your database has been created!
+
+## Because we KAN KAN KAN
+[Chit Chat Kanban](https://ora.pm/project/210804/kanban)
