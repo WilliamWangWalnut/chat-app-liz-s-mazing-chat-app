@@ -68,7 +68,7 @@ export default class Chat extends Component {
               try {
                 await firebase.auth().signInAnonymously();
               } catch (error) {
-                console.log(`Unable to sign in: ${error.message}`);
+                console.log(`Unable to log in: ${error.message}`);
               }
             }
             this.setState({
